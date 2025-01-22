@@ -90,3 +90,4 @@ app.get("/uploads/:filename", (req: Request, res: Response): void => {
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+
