@@ -47,6 +47,16 @@ button.upload-button {
   margin-top: 5px;
 }
 
+.disabled{
+  background-color: #4caf50;
+  cursor: not-allowed;
+  padding: 10px 20px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  margin-top: 5px;
+}
+
 button.upload-button:hover {
   background-color: #45a049;
 }
@@ -58,9 +68,6 @@ button.upload-button:hover {
   margin-top: 20px;
 }
 
-h2{
-  margin-top: 40px;
-}
 
 .uploaded-images-list h2 {
   margin-bottom: 20px;
@@ -88,16 +95,28 @@ h2{
   color: #555;
 }
 
-.copy-button {
-  background-color: #2196f3;
-  color: white;
-  padding: 5px 10px;
-  margin: 0px 0 0 10px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+
+/* Modal overlay */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* Transparent background */
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+  z-index: 1000; /* Ensure it appears above other elements */
+  visibility: hidden; /* Initially hidden */
+  opacity: 0;
+  transition: visibility 0s, opacity 0.3s ease-in-out;
 }
 
-.copy-button:hover {
-  background-color: #1976d2;
+/* Modal visible state */
+.modal.show {
+  visibility: visible;
+  opacity: 1;
 }
+
+

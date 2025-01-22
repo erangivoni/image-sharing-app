@@ -2,20 +2,28 @@ import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "./UploadPage.css";
+import { UploadedImageType } from '../types/UploadedImageType';
+import UploadMessage from "../components/uploadedMessage/uploadMessage";
 
-interface UploadedImage {
-  url: string;
-  expiry: number;
-}
 
 const serverPort = 3002;
 
 const UploadPage: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const [expiry, setExpiry] = useState<number>(5);
-  const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]); // Keeping track of uploaded images
+  const [uploadedImages, setUploadedImages] = useState<UploadedImageType[]>([]); // Keeping track of uploaded images
+  const [uploadedImage, setUploadedImage] = useState<UploadedImageType>();
+  const [isModal, setIsModal] = useState(false);
+  const [modalErr, setModalErr] = useState(false);
+
+
+  const closeModal = () => {
+    setIsModal(false);
+    setModalErr(false);
+  };
 
   const handleUpload = async () => {
+
     if (!file) {
       toast.error("Please select a file!");
       return;
@@ -27,30 +35,21 @@ const UploadPage: React.FC = () => {
       formData.append("expiry", expiry.toString());
 
       const response = await axios.post(`http://localhost:${serverPort}/v1/images`, formData);
+      console.log('response', response);
 
       const newImage = {
         url: response.data.url,
-        expiry: Date.now() + expiry * 60000, 
+        expiry: Date.now() + expiry * 60000,
       };
-      setUploadedImages((prevImages) => [...prevImages, newImage]);
-
-      toast.success(`Upload successful! Link: ${response.data.url}`);
-    } catch (error) {
-      toast.error("Upload failed. Please try again.");
-      console.error("Error uploading image:", error); // Log the error to the console
+      setUploadedImage(newImage);
+      setIsModal(true);
+    } catch (e: any) {
+      console.log('e', e);
+      setModalErr(e);
+      console.error("Error uploading image:", e); // Log the error to the console
     }
   };
 
-  const handleCopy = (url: string) => {
-    navigator.clipboard.writeText(url).then(
-      () => {
-        toast.success("Link copied to clipboard!");
-      },
-      () => {
-        toast.error("Failed to copy link.");
-      }
-    );
-  };
 
   return (
     <div className="upload-page">
@@ -77,32 +76,15 @@ const UploadPage: React.FC = () => {
         />
       </div>
 
-      <button className="upload-button" onClick={handleUpload}>Upload</button>
-
-      {uploadedImages.length > 0 && (
-        <div className="uploaded-images-list">
-          <h2>Uploaded Images</h2>
-          <ul>
-            {uploadedImages.map((image, index) => (
-              <li key={index} className="uploaded-image-item">
-                <div>
-                  <a href={image.url} target="_blank" rel="noopener noreferrer">
-                    {image.url}
-                  </a>
-                  <button
-                  className="copy-button"
-                  onClick={() => handleCopy(image.url)}
-                >
-                  Copy Link
-                </button>
-                </div>
-                <p>Expires at: {new Date(image.expiry).toLocaleString()}</p>
-              
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      <button  disabled={file === null} className= {` ${file===null? 'disabled': "upload-button"}`} onClick={handleUpload}>Upload</button>
+      {isModal &&
+        <div className={`confirmation-message modal ${isModal ? "show" : ""}`}>
+          <UploadMessage image={uploadedImage} onClick={closeModal} />
+        </div>}
+      {modalErr &&
+        <div className={`confirmation-message modal show`}>
+          <UploadMessage image={uploadedImage} onClick={closeModal} error={modalErr}/>
+        </div>}
     </div>
   );
 };

@@ -1,11 +1,6 @@
 const path = require("path");
 const fs = require("fs");
 
-// const uploadDir = path.join(__dirname, 'testUploads');
-// const testImagePath = path.join(__dirname, 'halo_kity.png');
-//const { scheduleImageExpiration } = require( '../src/services/imageExpiration');
-
-
 //this is the deleted file function:
 const scheduleImageExpiration = (uploadDir, filename, timeout) => {
   setTimeout(() => {
@@ -25,28 +20,22 @@ describe('Image Upload Tests', () => {
   const filename = 'testfile1.txt';
   const uploadDir = path.join(__dirname, 'testUploads');
   const tagetPath = path.join(uploadDir, filename);
-  console.log('uploadDir', uploadDir);
-  console.log('tagetPath', tagetPath);
-
-
-  // beforeEach(() => {
-  //   jest.useFakeTimers(); // Mock setTimeout
-  // });
-
-  // afterEach(() => {
-  //   jest.runOnlyPendingTimers(); // Run any remaining timers (cleanup)
-  //   jest.useRealTimers(); // Restore the real timers
-  // });
 
   beforeAll(() => {
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir);
     }
-
   });
 
   afterAll(() => {
-    // Clean up the upload folder after 30 secs
+    const files = fs.readdirSync(uploadDir);
+
+    files.forEach((file) => {
+      const filePath = path.join(uploadDir, file);
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    });
 
   });
 
@@ -61,12 +50,11 @@ describe('Image Upload Tests', () => {
 
   it('should delete the file and check after 5 seconds', () => {
 
-    scheduleImageExpiration(uploadDir, filename, 10);
+    scheduleImageExpiration(uploadDir, filename, 0);
 
     setTimeout(()=>{
       expect(fs.existsSync(tagetPath)).toBe(false)
     }, 2500); 
-
    
   });
 });

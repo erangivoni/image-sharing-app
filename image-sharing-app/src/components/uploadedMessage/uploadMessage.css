@@ -1,0 +1,84 @@
+.confirmation-message{
+    margin-top: 60px;
+    box-shadow: 2px 2px 2px 2px rgba(27, 26, 26, 0.1);
+    background-color: white;
+    padding: 10px;
+    border-radius: 8px;;
+
+}
+
+.modal {
+    /* position: fixed; */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* Transparent background */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it appears above other elements */
+    visibility: hidden; /* Initially hidden */
+    opacity: 0;
+    transition: visibility 0s, opacity 0.2s ease-in-out;
+  }
+
+.modal-content {
+    background: white;
+    border: 2px solid rgba(0, 0, 0, 0.8); /* Clear border */
+    border-radius: 8px;
+    padding: 20px;
+    width: 400px;
+    max-width: 90%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+  }
+  
+  .modal.show {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .message-link{
+    margin-bottom: 4px;
+  }
+
+  .copy-button {
+    background-color: #2196f3;
+    color: white;
+    padding: 5px 10px;
+    margin: 0px 0 0 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .copy-button:hover {
+    background-color: #0d6bca;
+  }
+
+  .close-bitton{
+    background-color: gray;
+    color: white;
+    padding: 5px 10px;
+    margin: 20px 0 0 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    
+  }
+
+  .error-mark {
+    /* color: red; */
+    font-size: 14px;
+    font-weight: bold;
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .error-icon {
+    font-size: 20px;
+  }
+  
+  

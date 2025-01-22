@@ -59,15 +59,20 @@ app.post("/v1/images", upload.single("image"), (req: Request, res: Response): vo
     res.status(400).send({ message: "No file uploaded" });
     return;
   }
-  const file = req.file;
-  const imageUrl = `http://localhost:${PORT}/uploads/${file.filename}`;
-  const expiryTime = parseInt(req.body.expiry) || 60;
 
-  console.log('uploaded single file', `file: ${file}`, `imageUrl: ${imageUrl}`, `expiryTime: ${expiryTime}`);
+  try{
+    const file = req.file;
+    const imageUrl = `http://localhost:${PORT}/uploads/${file.filename}`;
+    const expiryTime = parseInt(req.body.expiry) || 60;
+    console.log('uploaded single file', `file: ${file}`, `imageUrl: ${imageUrl}`, `expiryTime: ${expiryTime}`);
+    scheduleImageExpiration(uploadDir, file.filename, expiryTime * 1000 * 60);
+    res.json({ url: imageUrl });
+        
+  }
+  catch(e: any){
+    res.status(400).send({ message: "error loading file. " + e.message});
+  }
 
-  scheduleImageExpiration(uploadDir, file.filename, expiryTime * 1000 * 60);
-
-  res.json({ url: imageUrl });
 });
 
 // Serve uploaded images
